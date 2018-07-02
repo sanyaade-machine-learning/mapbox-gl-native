@@ -38,7 +38,7 @@ TEST(TileCover, Pitch) {
     // slightly offset center so that tile order is better defined
     transform.setLatLng({ 0.1, -0.1 });
     transform.setZoom(2);
-    transform.setAngle(5.0);
+    transform.setBearing(5.0);
     transform.setPitch(40.0 * M_PI / 180.0);
 
     EXPECT_EQ((std::vector<UnwrappedTileID>{
@@ -50,7 +50,7 @@ TEST(TileCover, Pitch) {
     constexpr uint32_t maximumLimitedTiles = 5 * 5;
 
     transform.resize({ 2048, 2048 });
-    transform.setAngle(-45.0 * M_PI / 180.0);
+    transform.setBearing(-45.0 * M_PI / 180.0);
 
     transform.setPitch(67.5 * M_PI / 180.0);
     for (double zoom = 0.0; zoom < 16.0; zoom += 0.5) {

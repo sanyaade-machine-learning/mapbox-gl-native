@@ -424,7 +424,7 @@ void NodeMap::startRender(NodeMap::RenderOptions options) {
     mbgl::CameraOptions camera;
     camera.center = mbgl::LatLng { options.latitude, options.longitude };
     camera.zoom = options.zoom;
-    camera.angle = -options.bearing * mbgl::util::DEG2RAD;
+    camera.bearing = -options.bearing * mbgl::util::DEG2RAD;
     camera.pitch = options.pitch * mbgl::util::DEG2RAD;
 
     if (map->getAxonometric() != options.axonometric) {

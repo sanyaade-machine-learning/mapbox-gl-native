@@ -337,8 +337,8 @@ void Renderer::Impl::render(const UpdateParameters& updateParameters) {
                 Point<float> pa(a.id.canonical.x, a.id.canonical.y);
                 Point<float> pb(b.id.canonical.x, b.id.canonical.y);
 
-                auto par = util::rotate(pa, parameters.state.getAngle());
-                auto pbr = util::rotate(pb, parameters.state.getAngle());
+                auto par = util::rotate(pa, parameters.state.getBearing());
+                auto pbr = util::rotate(pb, parameters.state.getBearing());
 
                 return std::tie(b.id.canonical.z, par.y, par.x) < std::tie(a.id.canonical.z, pbr.y, pbr.x);
             });

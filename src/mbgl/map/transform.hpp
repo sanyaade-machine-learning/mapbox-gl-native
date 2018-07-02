@@ -82,24 +82,24 @@ public:
     // Angle
 
     void rotateBy(const ScreenCoordinate& first, const ScreenCoordinate& second, const AnimationOptions& = {});
-    /** Sets the angle of rotation.
-        @param angle The new angle of rotation, measured in radians
+    /** Sets the bearing angle.
+        @param angle The new bearing angle, measured in radians
             counterclockwise from true north. */
-    void setAngle(double angle, const AnimationOptions& = {});
-    /** Sets the angle of rotation, keeping the given point fixed within the view.
-        @param angle The new angle of rotation, measured in radians
+    void setBearing(double angle, const AnimationOptions& = {});
+    /** Sets the bearing angle, keeping the given point fixed within the view.
+        @param angle The new bearing angle, measured in radians
             counterclockwise from true north.
         @param anchor A point relative to the top-left corner of the view. */
-    void setAngle(double angle, optional<ScreenCoordinate> anchor, const AnimationOptions& = {});
-    /** Sets the angle of rotation, keeping the center point fixed within the inset view.
-        @param angle The new angle of rotation, measured in radians
+    void setBearing(double bearing, optional<ScreenCoordinate> anchor, const AnimationOptions& = {});
+    /** Sets the bearing angle, keeping the center point fixed within the inset view.
+        @param angle The new bearing angle, measured in radians
             counterclockwise from true north.
         @param padding The viewport padding that affects the fixed center point. */
-    void setAngle(double angle, const EdgeInsets& padding, const AnimationOptions& = {});
-    /** Returns the angle of rotation.
-        @return The angle of rotation, measured in radians counterclockwise from
+    void setBearing(double bearing, const EdgeInsets& padding, const AnimationOptions& = {});
+    /** Returns the bearing angle.
+        @return The bearing angle, measured in radians counterclockwise from
             true north. */
-    double getAngle() const;
+    double getBearing() const;
 
     // Pitch
     /** Sets the pitch angle.

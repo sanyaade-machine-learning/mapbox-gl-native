@@ -803,8 +803,8 @@ void QMapboxGL::jumpTo(const QMapboxGLCameraOptions& camera)
     if (camera.zoom.isValid()) {
         mbglCamera.zoom = camera.zoom.value<double>();
     }
-    if (camera.angle.isValid()) {
-        mbglCamera.angle = -camera.angle.value<double>() * mbgl::util::DEG2RAD;
+    if (camera.bearing.isValid()) {
+        mbglCamera.bearing = -camera.bearing.value<double>() * mbgl::util::DEG2RAD;
     }
     if (camera.pitch.isValid()) {
         mbglCamera.pitch = camera.pitch.value<double>() * mbgl::util::DEG2RAD;

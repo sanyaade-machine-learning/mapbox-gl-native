@@ -204,7 +204,7 @@ std::vector<UnwrappedTileID> tileCover(const TransformState& state, uint8_t z, T
         TileCoordinate::fromScreenCoordinate(state, z, { w,   h   }).p,
         TileCoordinate::fromScreenCoordinate(state, z, { 0,   h   }).p,
         TileCoordinate::fromScreenCoordinate(state, z, { w/2, h/2 }).p,
-        z, mode, state.getAngle());
+        z, mode, state.getBearing());
 }
 
 std::vector<UnwrappedTileID> tileCover(const Geometry<double>& geometry, uint8_t z) {

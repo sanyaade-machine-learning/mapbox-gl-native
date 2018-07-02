@@ -61,7 +61,7 @@ void TransformState::getProjMatrix(mat4& projMatrix, uint16_t nearZ, bool aligne
         default: matrix::rotate_x(projMatrix, projMatrix, getPitch()); break;
     }
 
-    matrix::rotate_z(projMatrix, projMatrix, getAngle() + getNorthOrientationAngle());
+    matrix::rotate_z(projMatrix, projMatrix, getBearing() + getNorthOrientationAngle());
 
     const double dx = pixel_x() - size.width / 2.0f, dy = pixel_y() - size.height / 2.0f;
     matrix::translate(projMatrix, projMatrix, dx, dy, 0);
@@ -86,10 +86,10 @@ void TransformState::getProjMatrix(mat4& projMatrix, uint16_t nearZ, bool aligne
     // it is always <= 0.5 pixels.
     if (aligned) {
         const float xShift = float(size.width % 2) / 2, yShift = float(size.height % 2) / 2;
-        const double angleCos = std::cos(angle), angleSin = std::sin(angle);
+        const double bearingCos = std::cos(bearing), bearingSin = std::sin(bearing);
         double devNull;
-        const float dxa = -std::modf(dx, &devNull) + angleCos * xShift + angleSin * yShift;
-        const float dya = -std::modf(dy, &devNull) + angleCos * yShift + angleSin * xShift;
+        const float dxa = -std::modf(dx, &devNull) + bearingCos * xShift + bearingSin * yShift;
+        const float dya = -std::modf(dy, &devNull) + bearingCos * yShift + bearingSin * xShift;
         matrix::translate(projMatrix, projMatrix, dxa > 0.5 ? dxa - 1 : dxa, dya > 0.5 ? dya - 1 : dya, 0);
     }
 }
@@ -224,8 +224,12 @@ double TransformState::getMaxPitch() const {
 
 #pragma mark - Rotation
 
-float TransformState::getAngle() const {
-    return angle;
+double TransformState::getBearing() const {
+    return bearing;
+}
+
+void TransformState::setBearing(double bearing_) {
+    bearing = bearing_;
 }
 
 float TransformState::getFieldOfView() const {

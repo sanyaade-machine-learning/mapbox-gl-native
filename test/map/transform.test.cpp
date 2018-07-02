@@ -60,20 +60,20 @@ TEST(Transform, InvalidBearing) {
     ASSERT_DOUBLE_EQ(0, transform.getZoom());
 
     transform.setZoom(1);
-    transform.setAngle(2);
+    transform.setBearing(2);
 
     ASSERT_DOUBLE_EQ(0, transform.getLatLng().latitude());
     ASSERT_DOUBLE_EQ(0, transform.getLatLng().longitude());
     ASSERT_DOUBLE_EQ(1, transform.getZoom());
-    ASSERT_DOUBLE_EQ(2, transform.getAngle());
+    ASSERT_DOUBLE_EQ(2, transform.getBearing());
 
     const double invalid = std::nan("");
-    transform.setAngle(invalid);
+    transform.setBearing(invalid);
 
     ASSERT_DOUBLE_EQ(0, transform.getLatLng().latitude());
     ASSERT_DOUBLE_EQ(0, transform.getLatLng().longitude());
     ASSERT_DOUBLE_EQ(1, transform.getZoom());
-    ASSERT_DOUBLE_EQ(2, transform.getAngle());
+    ASSERT_DOUBLE_EQ(2, transform.getBearing());
 }
 
 TEST(Transform, IntegerZoom) {
@@ -205,7 +205,7 @@ TEST(Transform, Anchor) {
     ASSERT_DOUBLE_EQ(latLng.latitude(), transform.getLatLng().latitude());
     ASSERT_DOUBLE_EQ(latLng.longitude(), transform.getLatLng().longitude());
     ASSERT_DOUBLE_EQ(10, transform.getZoom());
-    ASSERT_DOUBLE_EQ(0, transform.getAngle());
+    ASSERT_DOUBLE_EQ(0, transform.getBearing());
 
     const optional<ScreenCoordinate> invalidAnchorPoint {};
     const ScreenCoordinate anchorPoint = { 150, 150 };
@@ -263,18 +263,18 @@ TEST(Transform, Anchor) {
     ASSERT_NE(latLng.longitude(), transform.getLatLng().longitude());
 
     transform.setLatLngZoom(latLng, 10);
-    transform.setAngle(M_PI_4);
-    ASSERT_NEAR(M_PI_4, transform.getAngle(), 0.000001);
+    transform.setBearing(M_PI_4);
+    ASSERT_NEAR(M_PI_4, transform.getBearing(), 0.000001);
     ASSERT_DOUBLE_EQ(latLng.latitude(), transform.getLatLng().latitude());
     ASSERT_DOUBLE_EQ(latLng.longitude(), transform.getLatLng().longitude());
 
-    transform.setAngle(0, invalidAnchorPoint);
-    ASSERT_DOUBLE_EQ(0, transform.getAngle());
+    transform.setBearing(0, invalidAnchorPoint);
+    ASSERT_DOUBLE_EQ(0, transform.getBearing());
     ASSERT_DOUBLE_EQ(latLng.latitude(), transform.getLatLng().latitude());
     ASSERT_DOUBLE_EQ(latLng.longitude(), transform.getLatLng().longitude());
 
-    transform.setAngle(45 * util::DEG2RAD, anchorPoint);
-    ASSERT_NEAR(45 / util::RAD2DEG, transform.getAngle(), 0.000001);
+    transform.setBearing(45 * util::DEG2RAD, anchorPoint);
+    ASSERT_NEAR(45 / util::RAD2DEG, transform.getBearing(), 0.000001);
     ASSERT_NEAR(anchorLatLng.latitude(), transform.getLatLng().latitude(), 1);
     ASSERT_NEAR(anchorLatLng.longitude(), transform.getLatLng().longitude(), 1);
 

@@ -29,7 +29,7 @@ struct CameraOptions {
 
     /** Bearing, measured in radians counterclockwise from true north. Wrapped
         to [−π rad, π rad). */
-    optional<double> angle;
+    optional<double> bearing;
 
     /** Pitch toward the horizon measured in radians, with 0 rad resulting in a
         two-dimensional map. */
@@ -41,7 +41,7 @@ constexpr bool operator==(const CameraOptions& a, const CameraOptions& b) {
         && a.padding == b.padding
         && a.anchor == b.anchor
         && a.zoom == b.zoom
-        && a.angle == b.angle
+        && a.bearing == b.bearing
         && a.pitch == b.pitch;
 }
 

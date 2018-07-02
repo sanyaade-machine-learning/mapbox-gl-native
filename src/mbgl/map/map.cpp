@@ -308,7 +308,7 @@ LatLng Map::getLatLng(const EdgeInsets& padding) const {
 void Map::resetPosition(const EdgeInsets& padding) {
     impl->cameraMutated = true;
     CameraOptions camera;
-    camera.angle = 0;
+    camera.bearing = 0;
     camera.pitch = 0;
     camera.center = LatLng(0, 0);
     camera.padding = padding;
@@ -423,8 +423,8 @@ CameraOptions Map::cameraForLatLngs(const std::vector<LatLng>& latLngs, const Ed
     Transform transform(impl->transform.getState());
     
     if (bearing) {
-        double angle = -*bearing * util::DEG2RAD; // Convert to radians
-        transform.setAngle(angle);
+        double bearingAsRadians = -*bearing * util::DEG2RAD; // Convert to radians
+        transform.setBearing(bearingAsRadians);
     }
     if (pitch) {
         double pitchAsRadian = *pitch * util::DEG2RAD; // Convert to radians
@@ -432,7 +432,7 @@ CameraOptions Map::cameraForLatLngs(const std::vector<LatLng>& latLngs, const Ed
     }
     
     CameraOptions options = mbgl::cameraForLatLngs(latLngs, transform, padding);
-    options.angle = transform.getAngle();
+    options.bearing = transform.getBearing();
     options.pitch = transform.getPitch();
     
     return options;
@@ -545,23 +545,23 @@ void Map::setBearing(double degrees, const AnimationOptions& animation) {
 
 void Map::setBearing(double degrees, optional<ScreenCoordinate> anchor, const AnimationOptions& animation) {
     impl->cameraMutated = true;
-    impl->transform.setAngle(-degrees * util::DEG2RAD, anchor, animation);
+    impl->transform.setBearing(-degrees * util::DEG2RAD, anchor, animation);
     impl->onUpdate();
 }
 
 void Map::setBearing(double degrees, const EdgeInsets& padding, const AnimationOptions& animation) {
     impl->cameraMutated = true;
-    impl->transform.setAngle(-degrees * util::DEG2RAD, padding, animation);
+    impl->transform.setBearing(-degrees * util::DEG2RAD, padding, animation);
     impl->onUpdate();
 }
 
 double Map::getBearing() const {
-    return -impl->transform.getAngle() * util::RAD2DEG;
+    return -impl->transform.getBearing() * util::RAD2DEG;
 }
 
 void Map::resetNorth(const AnimationOptions& animation) {
     impl->cameraMutated = true;
-    impl->transform.setAngle(0, animation);
+    impl->transform.setBearing(0, animation);
     impl->onUpdate();
 }
 
