@@ -66,9 +66,12 @@ public:
     double getBearing() const;
     void setBearing(double bearing);
 
-    float getFieldOfView() const;
-    float getCameraToCenterDistance() const;
-    float getPitch() const;
+    // Tilt
+    double getPitch() const;
+
+    // Camera
+    double getFieldOfView() const;
+    double getCameraToCenterDistance() const;
 
     // State
     bool isChanging() const;

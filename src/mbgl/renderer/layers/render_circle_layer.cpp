@@ -76,7 +76,7 @@ void RenderCircleLayer::render(PaintParameters& parameters, RenderSource*) {
                         tile.id.pixelsToTileUnits(1, parameters.state.getZoom()),
                         tile.id.pixelsToTileUnits(1, parameters.state.getZoom()) }}
                     : parameters.pixelsToGLUnits },
-                uniforms::u_camera_to_center_distance::Value{ parameters.state.getCameraToCenterDistance() },
+                uniforms::u_camera_to_center_distance::Value{ float(parameters.state.getCameraToCenterDistance()) },
                 uniforms::u_pitch_with_map::Value{ pitchWithMap }
             },
             paintPropertyBinders,
