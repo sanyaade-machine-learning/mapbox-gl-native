@@ -56,7 +56,7 @@ TEST(StyleConversion, CompositeFunctionExpression) {
     Error error;
 
     auto parseFunction = [&](const std::string& json) {
-        return convertJSON<DataDrivenPropertyValue<float>>(json, error);
+        return convertJSON<DataDrivenPropertyValue<float>>(json, error, false);
     };
 
     auto fn1 = parseFunction(R"(["interpolate", ["linear"], ["zoom"], 0, ["number", ["get", "x"]], 10, 10])");

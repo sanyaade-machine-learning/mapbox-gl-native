@@ -16,8 +16,11 @@ namespace conversion {
 
 template <class T>
 struct Converter<PropertyValue<T>> {
-    optional<PropertyValue<T>> operator()(const Convertible& value, Error& error) const {
+    optional<PropertyValue<T>> operator()(const Convertible& value, Error& error, bool convertTokens = false) const {
         using namespace mbgl::style::expression;
+
+        // Only icon-image and text-field support tokens, and they are both data-driven.
+        assert(!convertTokens);
 
         if (isUndefined(value)) {
             return PropertyValue<T>();
@@ -34,13 +37,13 @@ struct Converter<PropertyValue<T>> {
             }
             expression = PropertyExpression<T>(std::move(*parsed));
         } else if (isObject(value)) {
-            expression = convertFunctionToExpression<T>(value, error);
+            expression = convertFunctionToExpression<T>(value, error, false);
         } else {
             optional<T> constant = convert<T>(value, error);
             if (!constant) {
                 return {};
             }
-            return { *constant };
+            return PropertyValue<T>(*constant);
         }
 
         if (!expression) {
