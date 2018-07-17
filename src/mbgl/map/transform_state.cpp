@@ -53,7 +53,7 @@ void TransformState::getProjMatrix(mat4& projMatrix, uint16_t nearZ, bool aligne
     const bool flippedY = viewportMode == ViewportMode::FlippedY;
     matrix::scale(projMatrix, projMatrix, 1, flippedY ? 1 : -1, 1);
 
-    matrix::translate(projMatrix, projMatrix, 0, 0, -getCameraToCenterDistance());
+    matrix::translate(projMatrix, projMatrix, 0, 0, -cameraToCenterDistance);
 
     using NO = NorthOrientation;
     switch (getNorthOrientation()) {
