@@ -57,19 +57,34 @@ void TransformState::getProjMatrix(mat4& projMatrix, uint16_t nearZ, bool aligne
 
     using NO = NorthOrientation;
     switch (getNorthOrientation()) {
+        case NO::Upwards:    matrix::rotate_x(projMatrix, projMatrix, getPitch()); break;
         case NO::Rightwards: matrix::rotate_y(projMatrix, projMatrix, getPitch()); break;
-        case NO::Downwards: matrix::rotate_x(projMatrix, projMatrix, -getPitch()); break;
-        case NO::Leftwards: matrix::rotate_y(projMatrix, projMatrix, -getPitch()); break;
-        default: matrix::rotate_x(projMatrix, projMatrix, getPitch()); break;
+        case NO::Downwards:  matrix::rotate_x(projMatrix, projMatrix, -getPitch()); break;
+        case NO::Leftwards:  matrix::rotate_y(projMatrix, projMatrix, -getPitch()); break;
     }
 
-    matrix::rotate_z(projMatrix, projMatrix, getBearing() + getNorthOrientationAngle());
-
+    double bearingRotation = getBearing() + getNorthOrientationAngle();
     const double worldSize = Projection::worldSize(scale);
     Point<double> pixel = {
         position.x - ((size.width / 2.0) / size.width * worldSize),
         position.y - ((size.height / 2.0) / size.height * worldSize)
     };
+
+    if (!padding.isFlush()) {
+        ScreenCoordinate center = padding.getCenter(size.width, size.height);
+        Point<double> paddedPixel = {
+            position.x - (center.x / size.width * worldSize),
+            position.y - (center.y / size.height * worldSize)
+        };
+
+        const double xDiff = center.x - (size.width / 2.0);
+        const double paddingAngle = std::atan(xDiff / cameraToCenterDistance);
+        bearingRotation += paddingAngle;
+        pixel = paddedPixel;
+    }
+
+    matrix::rotate_z(projMatrix, projMatrix, bearingRotation);
+
     matrix::translate(projMatrix, projMatrix, pixel.x, pixel.y, 0);
 
     if (axonometric) {
@@ -210,7 +225,7 @@ uint8_t TransformState::getIntegerZoom() const {
 void TransformState::setLatLngBounds(optional<LatLngBounds> bounds_) {
     if (bounds_ != bounds) {
         bounds = bounds_;
-        setLatLngZoom(getLatLng(LatLng::Unwrapped), getZoom());
+        setLatLngZoom(getLatLng(LatLng::Unwrapped), padding, getZoom());
     }
 }
 
@@ -430,15 +445,16 @@ void TransformState::moveLatLng(const LatLng& latLng, const ScreenCoordinate& an
     auto centerCoord = Projection::project(getLatLng(LatLng::Unwrapped), scale);
     auto latLngCoord = Projection::project(latLng, scale);
     auto anchorCoord = Projection::project(screenCoordinateToLatLng(anchor), scale);
-    setLatLngZoom(Projection::unproject(centerCoord + latLngCoord - anchorCoord, scale), getZoom());
+    setLatLngZoom(Projection::unproject(centerCoord + latLngCoord - anchorCoord, scale), padding, getZoom());
 }
 
-void TransformState::setLatLngZoom(const LatLng& latLng, double zoom) {
+void TransformState::setLatLngZoom(const LatLng& latLng, const EdgeInsets &padding_, double zoom) {
     const LatLng constrained = bounds ? bounds->constrain(latLng) : latLng;
 
     constexpr double m = 1 - 1e-15;
     const double f = util::clamp(std::sin(util::DEG2RAD * constrained.latitude()), -m, m);
 
+    padding = padding_;
     scale = util::clamp(zoomScale(zoom), min_scale, max_scale);
     Bc = Projection::worldSize(scale) / util::DEGREES_MAX;
     Cc = Projection::worldSize(scale) / util::M2PI;

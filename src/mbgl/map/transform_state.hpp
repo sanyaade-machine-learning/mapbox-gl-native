@@ -110,7 +110,7 @@ public:
     /** Recenter the map so that the given coordinate is located at the given
         point on screen. */
     void moveLatLng(const LatLng&, const ScreenCoordinate&);
-    void setLatLngZoom(const LatLng &latLng, double zoom);
+    void setLatLngZoom(const LatLng &latLng, const EdgeInsets &padding, double zoom);
 
 private:
     bool rotatedNorth() const;
@@ -120,6 +120,7 @@ private:
     Point<double> screenCoordinateToMapPosition(const ScreenCoordinate& point) const;
 
     optional<LatLngBounds> bounds;
+    EdgeInsets padding;
 
     // Limit the amount of zooming possible on the map.
     double min_scale = std::pow(2, 0);

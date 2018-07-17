@@ -135,7 +135,7 @@ void Transform::easeTo(const CameraOptions& camera, const AnimationOptions& anim
         Point<double> framePoint = util::interpolate(startPoint, endPoint, t);
         LatLng frameLatLng = Projection::unproject(framePoint, startScale);
         double frameScale = util::interpolate(startScale, scale, t);
-        state.setLatLngZoom(frameLatLng, state.scaleZoom(frameScale));
+        state.setLatLngZoom(frameLatLng, padding, state.scaleZoom(frameScale));
 
         if (bearing != startBearing) {
             state.setBearing(util::wrap(util::interpolate(startBearing, bearing, t), -M_PI, M_PI));
@@ -295,7 +295,7 @@ void Transform::flyTo(const CameraOptions &camera, const AnimationOptions &anima
 
         // Convert to geographic coordinates and set the new viewpoint.
         LatLng frameLatLng = Projection::unproject(framePoint, startScale);
-        state.setLatLngZoom(frameLatLng, frameZoom);
+        state.setLatLngZoom(frameLatLng, padding, frameZoom);
 
         if (bearing != startBearing) {
             state.setBearing(util::wrap(util::interpolate(startBearing, bearing, k), -M_PI, M_PI));
