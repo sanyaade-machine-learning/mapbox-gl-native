@@ -61,7 +61,6 @@ public:
     double getZoom() const;
     double getScale() const;
     uint8_t getIntegerZoom() const;
-    double getZoomFraction() const;
 
     // Bounds
     void setLatLngBounds(optional<LatLngBounds>);
