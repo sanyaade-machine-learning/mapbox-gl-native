@@ -234,8 +234,9 @@ void GLFWView::onKey(GLFWwindow *window, int key, int /*scancode*/, int action, 
             };
             static size_t nextPlace = 0;
             mbgl::CameraOptions cameraOptions;
+            cameraOptions.padding = mbgl::EdgeInsets { 400, 0, 0, 200 };
             cameraOptions.center = places[nextPlace++];
-            cameraOptions.zoom = 20;
+            cameraOptions.zoom = 18;
             cameraOptions.pitch = 30;
 
             mbgl::AnimationOptions animationOptions(mbgl::Seconds(10));
@@ -254,19 +255,24 @@ void GLFWView::onKey(GLFWwindow *window, int key, int /*scancode*/, int action, 
 
                 static double routeDistance = ruler.lineDistance(lineString);
                 static double routeProgress = 0;
+
+                auto previousPoint = ruler.along(lineString, routeProgress * routeDistance);
+
                 routeProgress += 0.0005;
                 if (routeProgress > 1.0) routeProgress = 0;
 
-                double distance = routeProgress * routeDistance;
-                auto point = ruler.along(lineString, distance);
-                auto latLng = routeMap->getLatLng();
-                routeMap->setLatLng({ point.y, point.x });
-                double bearing = ruler.bearing({ latLng.longitude(), latLng.latitude() }, point);
+                auto point = ruler.along(lineString, routeProgress * routeDistance);
+                double bearing = ruler.bearing( previousPoint, point);
                 double easing = bearing - routeMap->getBearing();
                 easing += easing > 180.0 ? -360.0 : easing < -180 ? 360.0 : 0;
-                routeMap->setBearing(routeMap->getBearing() + (easing / 20));
-                routeMap->setPitch(67.5);
-                routeMap->setZoom(18.0);
+
+                mbgl::CameraOptions cameraOptions;
+                cameraOptions.padding = mbgl::EdgeInsets { 400, 0, 0, 200 };
+                cameraOptions.center = mbgl::LatLng { point.y, point.x };
+                cameraOptions.zoom = 18.0;
+                cameraOptions.pitch = 67.5;
+                cameraOptions.bearing = -(routeMap->getBearing() + (easing / 20)) * mbgl::util::DEG2RAD;
+                routeMap->easeTo(cameraOptions, {});
             };
             view->animateRouteCallback(view->map);
         } break;
